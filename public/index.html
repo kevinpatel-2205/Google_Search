@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad Text Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Auto Google Search from Notepad</h1>
+
+    <div id="status">Monitoring file changes...</div>
+
+    <script>
+        // Automatically fetch search result from server when file changes
+        function checkForUpdates() {
+            fetch('/get-latest-search', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.url) {
+                    window.open(data.url, '_blank');
+                    document.getElementById('status').innerText = "Opened search: " + data.query;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Polling for file changes every 5 seconds
+        setInterval(checkForUpdates, 5000);
+    </script>
+</body>
+</html>
